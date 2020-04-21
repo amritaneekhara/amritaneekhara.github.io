@@ -1,0 +1,22 @@
+<svg width="150" height="190" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <clipPath id="clip-path">
+   <path id="svg_1" fill="none" d="m138.05,37.577l-58.78,-33.92a12.3,12.3 0 0 0 -12.33,0l-58.79,33.92a12.37,12.37 0 0 0 -6.15,10.69l0,67.89a12.33,12.33 0 0 0 6.15,10.66l29.41,17l0,34.66a3.7,3.7 0 0 0 5.55,3.19l95,-54.82a12.3,12.3 0 0 0 6.15,-10.66l0,-67.93a12.4,12.4 0 0 0 -6.21,-10.68z"/>
+  </clipPath>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="192" width="152" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g stroke="null" id="svg_2" clip-path="url(#clip-path)">
+   <path stroke="null" id="svg_3" fill="#ef6c00" d="m149.195002,44.157l-71.08,41.05l-71.12,-41.05l0,82.1l35.56,20.51l0,41.06l106.64,-61.57l0,-82.1z"/>
+   <g stroke="null" id="svg_4" fill="#ff9800">
+    <path stroke="null" id="svg_5" d="m78.115002,85.207l-71.12,-41.05l71.12,-41.05l71.08,41.05l-71.08,41.05z"/>
+    <path stroke="null" id="svg_6" d="m76.855002,83.957l-69.41,-40.07l-0.45,0.27l71.12,41.05l71.08,-41.05l-1.67,-0.99l-70.67,40.79z"/>
+    <path stroke="null" id="svg_7" d="m78.115002,85.717l0,-0.51l-70.67,-40.81l-0.45,0.27l71.12,41.05z"/>
+   </g>
+  </g>
+ </g>
+</svg>
