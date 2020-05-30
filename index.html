@@ -35,9 +35,16 @@
 	</head>
 	<body>
 		<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+		<script>
+		window.addEventListener('keydown', function(e) {
+		if(e.keyCode == 32 && e.target == document.body) {
+			e.preventDefault();
+		}
+	});
+		</script>
 		<df-messenger
 		  intent="WELCOME"
-		  chat-title="Portfolio_Amrita"
+		  chat-title="Amrita Neekhara"
 		  agent-id="744ee447-ecfd-4c49-9b96-82d5c46476bc"
 		  language-code="en"
 		></df-messenger>
@@ -168,5 +175,6 @@
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/main.js"></script>
+
 	</body>
 </html>
