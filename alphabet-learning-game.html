@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Alphabet Learning Game</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/roboto/1.1.0/css/roboto.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f7fe;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            text-align: center;
+            touch-action: manipulation;
+            overflow: hidden;
+            background-image: linear-gradient(to bottom, #f9f7fe, #e6f2ff);
+        }
+        
+        #header {
+            background-color: #FF6B6B;
+            color: white;
+            padding: 15px;
+            font-size: 32px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-bottom: 5px solid #FF8E8E;
+            font-weight: bold;
+        }
+        
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        #home-message {
+            font-size: 26px;
+            margin: 50px 20px;
+            color: #6A67CE;
+            max-width: 800px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(106, 103, 206, 0.15);
+            border: 3px dashed #FFB347;
+            line-height: 1.5;
+        }
+        
+        #word-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .word-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            padding: 15px;
+            font-size: 26px;
+            color: #6A67CE;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 4px solid #4ECDC4;
+            width: calc(50% - 15px);
+            max-width: 200px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: capitalize;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .word-card:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #4ECDC4;
+            transition: height 0.3s;
+        }
+        
+        .word-card:hover, .word-card:active {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 15px 20px rgba(0,0,0,0.15);
+        }
+        
+        .word-card:hover:before, .word-card:active:before {
+            height: 100%;
+            opacity: 0.2;
+        }
+        
+        #image-display {
+            margin: 15px auto;
+            max-width: 90%;
+            height: 50vh;
+            max-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border: 5px solid #FFB347;
+        }
+        
+        #displayed-image {
+            max-width: 100%;
+            max-height: 75%;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            object-fit: contain;
+            border: 3px solid #4ECDC4;
+        }
+        
+        #image-word {
+            font-size: 40px;
+            margin-top: 15px;
+            color: #FF6B6B;
+            text-transform: capitalize;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px rgba(255,179,71,0.3);
+            position: relative;
+            display: inline-block;
+        }
+        
+        #image-word:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #FFB347;
+            border-radius: 2px;
+        }
+        
+        #speak-button {
+            background-color: #6A67CE;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 30px 10px 25px;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 20px 0 5px;
+            box-shadow: 0 8px 15px rgba(106, 103, 206, 0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #speak-button:hover, #speak-button:active {
+            background-color: #5753b8;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(106, 103, 206, 0.4);
+        }
+        
+        #speak-button svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        #back-button {
+            background-color: #FF8E8E;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 15px 0;
+            box-shadow: 0 8px 15px rgba(255,142,142,0.3);
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        #back-button:hover, #back-button:active {
+            background-color: #FF6B6B;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(255,142,142,0.4);
+        }
+        
+        #alphabet-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 10px;
+            background-color: white;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            border-top: 4px solid #FFB347;
+        }
+        
+        .alphabet-tile {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #6A67CE, #8985E6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+            box-shadow: 0 5px 10px rgba(106, 103, 206, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .alphabet-tile:hover, .alphabet-tile:active {
+            transform: translateY(-5px) scale(1.1);
+            background: linear-gradient(145deg, #FF6B6B, #FF8E8E);
+            box-shadow: 0 10px 15px rgba(255,107,107,0.3);
+        }
+        
+        .selected-letter {
+            background: linear-gradient(145deg, #FF6B6B, #FF8E8E);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 15px rgba(255,107,107,0.3);
+        }
+        
+        .bounce {
+            animation: bounce 0.6s;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        
+        @media (max-width: 500px) {
+            .alphabet-tile {
+                width: 38px;
+                height: 38px;
+                font-size: 20px;
+            }
+            
+            .word-card {
+                font-size: 22px;
+                height: 80px;
+            }
+            
+            #header {
+                font-size: 26px;
+                padding: 10px;
+            }
+            
+            #image-word {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header">Alphabet Adventure</div>
+    
+    <div id="content">
+        <div id="home-message">
+            Touch any letter below to learn words and see pictures! <br>
+            I can help you learn the ABCs!
+        </div>
+        
+        <div id="word-container" style="display:none"></div>
+        
+        <div id="image-display" style="display:none">
+            <img id="displayed-image" src="" alt="">
+            <div id="image-word"></div>
+            <button id="speak-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                Speak
+            </button>
+            <button id="back-button">Back to Words</button>
+        </div>
+    </div>
+    
+    <div id="alphabet-container"></div>
+    
+    <script>
+        // Words database organized by starting letter
+        const wordDatabase = {
+            'A': [
+                {word: 'apple', image: '/api/placeholder/400/320'},
+                {word: 'ant', image: '/api/placeholder/400/320'},
+                {word: 'airplane', image: '/api/placeholder/400/320'},
+                {word: 'astronaut', image: '/api/placeholder/400/320'},
+                {word: 'alligator', image: '/api/placeholder/400/320'}
+            ],
+            'B': [
+                {word: 'ball', image: '/api/placeholder/400/320'},
+                {word: 'banana', image: '/api/placeholder/400/320'},
+                {word: 'butterfly', image: '/api/placeholder/400/320'},
+                {word: 'bear', image: '/api/placeholder/400/320'},
+                {word: 'boat', image: '/api/placeholder/400/320'}
+            ],
+            'C': [
+                {word: 'cat', image: '/api/placeholder/400/320'},
+                {word: 'car', image: '/api/placeholder/400/320'},
+                {word: 'cake', image: '/api/placeholder/400/320'},
+                {word: 'cow', image: '/api/placeholder/400/320'},
+                {word: 'cookie', image: '/api/placeholder/400/320'}
+            ],
+            'D': [
+                {word: 'dog', image: '/api/placeholder/400/320'},
+                {word: 'duck', image: '/api/placeholder/400/320'},
+                {word: 'dinosaur', image: '/api/placeholder/400/320'},
+                {word: 'donut', image: '/api/placeholder/400/320'},
+                {word: 'dolphin', image: '/api/placeholder/400/320'}
+            ],
+            'E': [
+                {word: 'elephant', image: '/api/placeholder/400/320'},
+                {word: 'egg', image: '/api/placeholder/400/320'},
+                {word: 'eye', image: '/api/placeholder/400/320'},
+                {word: 'ear', image: '/api/placeholder/400/320'},
+                {word: 'earth', image: '/api/placeholder/400/320'}
+            ],
+            'F': [
+                {word: 'fish', image: '/api/placeholder/400/320'},
+                {word: 'frog', image: '/api/placeholder/400/320'},
+                {word: 'flower', image: '/api/placeholder/400/320'},
+                {word: 'fruit', image: '/api/placeholder/400/320'},
+                {word: 'football', image: '/api/placeholder/400/320'}
+            ],
+            'G': [
+                {word: 'giraffe', image: '/api/placeholder/400/320'},
+                {word: 'goat', image: '/api/placeholder/400/320'},
+                {word: 'grapes', image: '/api/placeholder/400/320'},
+                {word: 'garden', image: '/api/placeholder/400/320'},
+                {word: 'gloves', image: '/api/placeholder/400/320'}
+            ],
+            'H': [
+                {word: 'horse', image: '/api/placeholder/400/320'},
+                {word: 'hat', image: '/api/placeholder/400/320'},
+                {word: 'house', image: '/api/placeholder/400/320'},
+                {word: 'helicopter', image: '/api/placeholder/400/320'},
+                {word: 'heart', image: '/api/placeholder/400/320'}
+            ],
+            'I': [
+                {word: 'ice cream', image: '/api/placeholder/400/320'},
+                {word: 'insect', image: '/api/placeholder/400/320'},
+                {word: 'island', image: '/api/placeholder/400/320'},
+                {word: 'igloo', image: '/api/placeholder/400/320'},
+                {word: 'ink', image: '/api/placeholder/400/320'}
+            ],
+            'J': [
+                {word: 'jellyfish', image: '/api/placeholder/400/320'},
+                {word: 'jacket', image: '/api/placeholder/400/320'},
+                {word: 'jam', image: '/api/placeholder/400/320'},
+                {word: 'juice', image: '/api/placeholder/400/320'},
+                {word: 'jungle', image: '/api/placeholder/400/320'}
+            ],
+            'K': [
+                {word: 'kite', image: '/api/placeholder/400/320'},
+                {word: 'king', image: '/api/placeholder/400/320'},
+                {word: 'koala', image: '/api/placeholder/400/320'},
+                {word: 'kangaroo', image: '/api/placeholder/400/320'},
+                {word: 'key', image: '/api/placeholder/400/320'}
+            ],
+            'L': [
+                {word: 'lion', image: '/api/placeholder/400/320'},
+                {word: 'lemon', image: '/api/placeholder/400/320'},
+                {word: 'leaf', image: '/api/placeholder/400/320'},
+                {word: 'lighthouse', image: '/api/placeholder/400/320'},
+                {word: 'lizard', image: '/api/placeholder/400/320'}
+            ],
+            'M': [
+                {word: 'monkey', image: '/api/placeholder/400/320'},
+                {word: 'moon', image: '/api/placeholder/400/320'},
+                {word: 'mouse', image: '/api/placeholder/400/320'},
+                {word: 'mango', image: '/api/placeholder/400/320'},
+                {word: 'mountain', image: '/api/placeholder/400/320'}
+            ],
+            'N': [
+                {word: 'nest', image: '/api/placeholder/400/320'},
+                {word: 'night', image: '/api/placeholder/400/320'},
+                {word: 'nurse', image: '/api/placeholder/400/320'},
+                {word: 'nose', image: '/api/placeholder/400/320'},
+                {word: 'noodles', image: '/api/placeholder/400/320'}
+            ],
+            'O': [
+                {word: 'orange', image: '/api/placeholder/400/320'},
+                {word: 'owl', image: '/api/placeholder/400/320'},
+                {word: 'octopus', image: '/api/placeholder/400/320'},
+                {word: 'ocean', image: '/api/placeholder/400/320'},
+                {word: 'ostrich', image: '/api/placeholder/400/320'}
+            ],
+            'P': [
+                {word: 'penguin', image: '/api/placeholder/400/320'},
+                {word: 'pizza', image: '/api/placeholder/400/320'},
+                {word: 'panda', image: '/api/placeholder/400/320'},
+                {word: 'pencil', image: '/api/placeholder/400/320'},
+                {word: 'puppy', image: '/api/placeholder/400/320'}
+            ],
+            'Q': [
+                {word: 'queen', image: '/api/placeholder/400/320'},
+                {word: 'quilt', image: '/api/placeholder/400/320'},
+                {word: 'quail', image: '/api/placeholder/400/320'},
+                {word: 'question', image: '/api/placeholder/400/320'},
+                {word: 'quiet', image: '/api/placeholder/400/320'}
+            ],
+            'R': [
+                {word: 'rabbit', image: '/api/placeholder/400/320'},
+                {word: 'rainbow', image: '/api/placeholder/400/320'},
+                {word: 'robot', image: '/api/placeholder/400/320'},
+                {word: 'rocket', image: '/api/placeholder/400/320'},
+                {word: 'river', image: '/api/placeholder/400/320'}
+            ],
+            'S': [
+                {word: 'sun', image: '/api/placeholder/400/320'},
+                {word: 'star', image: '/api/placeholder/400/320'},
+                {word: 'sheep', image: '/api/placeholder/400/320'},
+                {word: 'snake', image: '/api/placeholder/400/320'},
+                {word: 'strawberry', image: '/api/placeholder/400/320'}
+            ],
+            'T': [
+                {word: 'turtle', image: '/api/placeholder/400/320'},
+                {word: 'train', image: '/api/placeholder/400/320'},
+                {word: 'tiger', image: '/api/placeholder/400/320'},
+                {word: 'tomato', image: '/api/placeholder/400/320'},
+                {word: 'tree', image: '/api/placeholder/400/320'}
+            ],
+            'U': [
+                {word: 'umbrella', image: '/api/placeholder/400/320'},
+                {word: 'unicorn', image: '/api/placeholder/400/320'},
+                {word: 'underwear', image: '/api/placeholder/400/320'},
+                {word: 'up', image: '/api/placeholder/400/320'},
+                {word: 'ukulele', image: '/api/placeholder/400/320'}
+            ],
+            'V': [
+                {word: 'van', image: '/api/placeholder/400/320'},
+                {word: 'violin', image: '/api/placeholder/400/320'},
+                {word: 'vegetables', image: '/api/placeholder/400/320'},
+                {word: 'volcano', image: '/api/placeholder/400/320'},
+                {word: 'vest', image: '/api/placeholder/400/320'}
+            ],
+            'W': [
+                {word: 'whale', image: '/api/placeholder/400/320'},
+                {word: 'window', image: '/api/placeholder/400/320'},
+                {word: 'wagon', image: '/api/placeholder/400/320'},
+                {word: 'watermelon', image: '/api/placeholder/400/320'},
+                {word: 'watch', image: '/api/placeholder/400/320'}
+            ],
+            'X': [
+                {word: 'xylophone', image: '/api/placeholder/400/320'},
+                {word: 'x-ray', image: '/api/placeholder/400/320'},
+                {word: 'box', image: '/api/placeholder/400/320'},
+                {word: 'fox', image: '/api/placeholder/400/320'},
+                {word: 'ax', image: '/api/placeholder/400/320'}
+            ],
+            'Y': [
+                {word: 'yellow', image: '/api/placeholder/400/320'},
+                {word: 'yo-yo', image: '/api/placeholder/400/320'},
+                {word: 'yarn', image: '/api/placeholder/400/320'},
+                {word: 'yogurt', image: '/api/placeholder/400/320'},
+                {word: 'yak', image: '/api/placeholder/400/320'}
+            ],
+            'Z': [
+                {word: 'zebra', image: '/api/placeholder/400/320'},
+                {word: 'zoo', image: '/api/placeholder/400/320'},
+                {word: 'zipper', image: '/api/placeholder/400/320'},
+                {word: 'zero', image: '/api/placeholder/400/320'},
+                {word: 'zigzag', image: '/api/placeholder/400/320'}
+            ]
+        };
+        
+        // Get DOM elements
+        const alphabetContainer = document.getElementById('alphabet-container');
+        const wordContainer = document.getElementById('word-container');
+        const homeMessage = document.getElementById('home-message');
+        const imageDisplay = document.getElementById('image-display');
+        const displayedImage = document.getElementById('displayed-image');
+        const imageWord = document.getElementById('image-word');
+        const backButton = document.getElementById('back-button');
+        const speakButton = document.getElementById('speak-button');
+        
+        // Speech synthesis setup
+        const synth = window.speechSynthesis;
+        let currentWord = "";
+        
+        // Create alphabet tiles
+        for (let i = 65; i <= 90; i++) {
+            const letter = String.fromCharCode(i);
+            const tile = document.createElement('div');
+            tile.className = 'alphabet-tile';
+            tile.textContent = letter;
+            tile.addEventListener('click', () => {
+                // Reset selected styling
+                document.querySelectorAll('.alphabet-tile').forEach(el => {
+                    el.classList.remove('selected-letter');
+                });
+                
+                // Add selected styling
+                tile.classList.add('selected-letter');
+                
+                // Show words for this letter
+                showWords(letter);
+            });
+            alphabetContainer.appendChild(tile);
+        }
+        
+        // Function to show words for a selected letter
+        function showWords(letter) {
+            // Clear previous words
+            wordContainer.innerHTML = '';
+            
+            // Get words for the selected letter
+            const words = wordDatabase[letter];
+            
+            // Create word cards
+            words.forEach(wordObj => {
+                const wordCard = document.createElement('div');
+                wordCard.className = 'word-card';
+                wordCard.textContent = wordObj.word;
+                wordCard.addEventListener('click', () => {
+                    wordCard.classList.add('bounce');
+                    showImage(wordObj);
+                    setTimeout(() => {
+                        wordCard.classList.remove('bounce');
+                    }, 600);
+                });
+                wordContainer.appendChild(wordCard);
+            });
+            
+            // Hide home message, show word container
+            homeMessage.style.display = 'none';
+            wordContainer.style.display = 'flex';
+            imageDisplay.style.display = 'none';
+        }
+        
+        // Function to show image for a selected word
+        function showImage(wordObj) {
+            // Set image and word
+            displayedImage.src = wordObj.image;
+            displayedImage.alt = wordObj.word;
+            imageWord.textContent = wordObj.word;
+            currentWord = wordObj.word;
+            
+            // Hide word container, show image display
+            wordContainer.style.display = 'none';
+            imageDisplay.style.display = 'flex';
+            
+            // Automatically speak the word when showing the image
+            speakWord(currentWord);
+        }
+        
+        // Function to speak a word
+        function speakWord(word) {
+            // Cancel any ongoing speech
+            synth.cancel();
+            
+            // Create a new utterance
+            const utterance = new SpeechSynthesisUtterance(word);
+            
+            // Set properties for kid-friendly voice
+            utterance.rate = 0.9; // Slightly slower
+            utterance.pitch = 1.2; // Slightly higher pitch
+            utterance.volume = 1.0; // Full volume
+            
+            // Get available voices and try to select a child-friendly one
+            let voices = synth.getVoices();
+            if (voices.length > 0) {
+                // Try to find a good voice (preferences may vary by device)
+                let preferredVoice = voices.find(voice => 
+                    voice.name.includes('child') || 
+                    voice.name.includes('kid') ||
+                    voice.name.includes('female')
+                );
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+            }
+            
+            // Speak the word
+            synth.speak(utterance);
+        }
+        
+        // Set up speak button
+        speakButton.addEventListener('click', () => {
+            speakButton.classList.add('bounce');
+            speakWord(currentWord);
+            setTimeout(() => {
+                speakButton.classList.remove('bounce');
+            }, 600);
+        });
+        
+        // Back button functionality
+        backButton.addEventListener('click', () => {
+            // Hide image display, show word container
+            imageDisplay.style.display = 'none';
+            wordContainer.style.display = 'flex';
+        });
+        
+        // Initialize speech synthesis voices when available
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = function() {
+                speechSynthesis.getVoices();
+            };
+        }
+    </script>
+</body>
+</html>
